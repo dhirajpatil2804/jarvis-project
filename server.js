@@ -12,26 +12,32 @@ app.use(cors());
    DATABASE CONNECTION (FINAL FIX)
 ========================= */
 
-// 🔥 Use your MYSQL_PUBLIC_URL from Railway
-const dbUrl = "mysql://root:suIGnCa0wI1vnhKWrHEirgusRPNGTVhR@monorail.proxy.rlwy.net:18123/railway";
+// 🔥 use Railway internal DB URL
+const dbUrl = process.env.MYSQL_URL;
 
-const parsed = new URL(dbUrl);
+let db;
 
-const db = mysql.createConnection({
-  host: parsed.hostname,
-  user: parsed.username,
-  password: parsed.password,
-  database: parsed.pathname.replace('/', ''),
-  port: parsed.port
-});
+if (!dbUrl) {
+  console.error("❌ MYSQL_URL not found. Check Railway variables.");
+} else {
+  const parsed = new URL(dbUrl);
 
-db.connect((err) => {
-  if (err) {
-    console.error("❌ DB Connection Error:", err);
-  } else {
-    console.log("✅ Connected to Railway MySQL");
-  }
-});
+  db = mysql.createConnection({
+    host: parsed.hostname,
+    user: parsed.username,
+    password: parsed.password,
+    database: parsed.pathname.replace('/', ''),
+    port: parsed.port
+  });
+
+  db.connect((err) => {
+    if (err) {
+      console.error("❌ DB Connection Error:", err);
+    } else {
+      console.log("✅ Connected to Railway MySQL");
+    }
+  });
+}
 
 /* =========================
    ROOT ROUTE
