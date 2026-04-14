@@ -108,3 +108,10 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+db.connect((err) => {
+    if (err) {
+        console.error('DB error:', err);
+    } else {
+        console.log('Connected to DB ✅');
+    }
+});
