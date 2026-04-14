@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cors());
 
 /* =========================
-   ENV DEBUG (VERY IMPORTANT)
+   ENV DEBUG
 ========================= */
 
 console.log("ENV CHECK:", {
@@ -17,6 +17,7 @@ console.log("ENV CHECK:", {
   password: process.env.MYSQLPASSWORD ? "✔️" : "❌",
   database: process.env.MYSQLDATABASE || "❌",
   port: process.env.MYSQLPORT || "❌",
+  appPort: process.env.PORT || "❌"
 });
 
 /* =========================
@@ -57,9 +58,10 @@ app.get('/', (req, res) => {
 });
 
 /* =========================
-   START SERVER
+   START SERVER (IMPORTANT FIX)
 ========================= */
-const PORT = process.env.PORT || 3000;
+
+const PORT = process.env.PORT; // 🔥 VERY IMPORTANT
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
