@@ -9,17 +9,7 @@ app.use(express.json());
 app.use(cors());
 
 /* =========================
-   DEBUG: CHECK ENV VARIABLES
-========================= */
-console.log("ENV CHECK:", {
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT
-});
-
-/* =========================
-   DATABASE CONNECTION
+   DATABASE CONNECTION (FINAL FIX)
 ========================= */
 const db = mysql.createConnection({
   host: "monorail.proxy.rlwy.net",
