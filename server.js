@@ -9,35 +9,29 @@ app.use(express.json());
 app.use(cors());
 
 /* =========================
-   DATABASE CONNECTION (FINAL FIX)
+   DATABASE CONNECTION (FINAL GUARANTEED FIX)
 ========================= */
 
-// 🔥 use Railway internal DB URL
-const dbUrl = process.env.MYSQL_URL;
+// 🔥 Hardcoded Railway INTERNAL DB URL (from your screenshot)
+const dbUrl = "mysql://root:suIGnCa0wI1vnhKWrHEirgusRPNGTVhR@mysql.railway.internal:3306/railway";
 
-let db;
+const parsed = new URL(dbUrl);
 
-if (!dbUrl) {
-  console.error("❌ MYSQL_URL not found. Check Railway variables.");
-} else {
-  const parsed = new URL(dbUrl);
+const db = mysql.createConnection({
+  host: parsed.hostname,
+  user: parsed.username,
+  password: parsed.password,
+  database: parsed.pathname.replace('/', ''),
+  port: parsed.port
+});
 
-  db = mysql.createConnection({
-    host: parsed.hostname,
-    user: parsed.username,
-    password: parsed.password,
-    database: parsed.pathname.replace('/', ''),
-    port: parsed.port
-  });
-
-  db.connect((err) => {
-    if (err) {
-      console.error("❌ DB Connection Error:", err);
-    } else {
-      console.log("✅ Connected to Railway MySQL");
-    }
-  });
-}
+db.connect((err) => {
+  if (err) {
+    console.error("❌ DB Connection Error:", err);
+  } else {
+    console.log("✅ Connected to Railway MySQL");
+  }
+});
 
 /* =========================
    ROOT ROUTE
