@@ -22,11 +22,11 @@ console.log("ENV CHECK:", {
    DATABASE CONNECTION
 ========================= */
 const db = mysql.createConnection({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT
+  host: "monorail.proxy.rlwy.net",
+  user: "root",
+  password: "suIGnCa0wI1vnhKWrHEirgusRPNGTVhR", // your actual password
+  database: "railway",
+  port: 18123
 });
 
 db.connect((err) => {
