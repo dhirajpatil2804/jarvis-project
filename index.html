@@ -1,0 +1,47 @@
+<html>
+<head>
+    <title>Dixit JARVIS - Virtual Assistant</title>
+    <link rel="shortcut icon" href="avatar.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        if (!localStorage.getItem('loggedIn')) {
+            window.location.href = 'login.html'; 
+        }
+    </script>
+</head>
+<body text="white">
+    <section class="main">
+        <div class="video-container">
+            <video class="video-background" autoplay loop muted>
+                <source src="JARVIS.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="content-container">
+            <h1>J A R V I S</h1>
+            <p>I am a Virtual Assistant JARVIS, Welcome Dixit Boss..., how may I help you...?</p>
+            <div class="input">
+                <button class="talk"><i class="fas fa-microphone-alt"></i></button>
+                <h1 class="content">Click here to speak</h1>
+            </div>
+        </div>
+    </section>
+    <script src="app.js"></script>
+    <button id="logoutBtn">Logout</button>
+<script>
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('loggedIn'); 
+        window.location.href = 'login.html';  
+    });
+</script>
+<script>
+    if (!localStorage.getItem('loggedIn')) {
+        if (!localStorage.getItem('username')) {
+            window.location.href = 'register.html'; 
+        } else {
+            window.location.href = 'login.html';  
+        }
+    }
+</script>
+</body>
+</html>
