@@ -8,23 +8,27 @@ app.use(express.json());
 app.use(cors());
 
 /* =========================
-   FINAL DATABASE FIX (HARDCODED)
+   FINAL DATABASE FIX (POOL + ENV)
 ========================= */
 
-// 🔥 YOUR ACTUAL INTERNAL DB URL (from Railway)
-const db = mysql.createConnection({
-  host: "mysql.railway.internal",
-  user: "root",
-  password: "suIGnCa0wI1vnhKWrHEirgusRPNGTVhR",
-  database: "railway",
-  port: 3306
+// Use Railway internal variables
+const pool = mysql.createPool({
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT,
+  waitForConnections: true,
+  connectionLimit: 10
 });
 
-db.connect((err) => {
+// Test connection
+pool.getConnection((err, conn) => {
   if (err) {
     console.error("❌ DB Connection Error:", err);
   } else {
     console.log("✅ Connected to Railway MySQL");
+    conn.release();
   }
 });
 
