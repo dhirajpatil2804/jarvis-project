@@ -12,10 +12,11 @@ app.use(cors());
 
 // MySQL Database connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root', // MySQL username
-    password: 'root', // MySQL password
-    database: 'jarvis_db' // Database name
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE,
+    port: process.env.MYSQLPORT
 });
 
 db.connect((err) => {
