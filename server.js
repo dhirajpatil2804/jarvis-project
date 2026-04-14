@@ -8,41 +8,37 @@ app.use(express.json());
 app.use(cors());
 
 /* =========================
-   SAFE DATABASE SETUP
+   DEBUG ENV VARIABLES
 ========================= */
 
-let pool = null;
+console.log("ENV CHECK:", {
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD ? "✔️" : "❌",
+  db: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT,
+});
 
-try {
-  if (
-    process.env.MYSQLHOST &&
-    process.env.MYSQLUSER &&
-    process.env.MYSQLPASSWORD
-  ) {
-    console.log("ENV OK ✅");
+/* =========================
+   DATABASE CONNECTION (FORCE TRY)
+========================= */
 
-    pool = mysql.createPool({
-      host: process.env.MYSQLHOST,
-      user: process.env.MYSQLUSER,
-      password: process.env.MYSQLPASSWORD,
-      database: process.env.MYSQLDATABASE,
-      port: process.env.MYSQLPORT,
-    });
+const pool = mysql.createPool({
+  host: process.env.MYSQLHOST || "mysql.railway.internal",
+  user: process.env.MYSQLUSER || "root",
+  password: process.env.MYSQLPASSWORD || "",
+  database: process.env.MYSQLDATABASE || "railway",
+  port: process.env.MYSQLPORT || 3306,
+});
 
-    pool.getConnection((err, conn) => {
-      if (err) {
-        console.error("❌ DB Error:", err.message);
-      } else {
-        console.log("✅ Connected to DB");
-        conn.release();
-      }
-    });
+pool.getConnection((err, conn) => {
+  if (err) {
+    console.error("❌ DB Error:", err.message);
   } else {
-    console.log("⚠️ ENV VARIABLES MISSING");
+    console.log("✅ Connected to DB");
+    conn.release();
   }
-} catch (err) {
-  console.error("❌ DB INIT ERROR:", err.message);
-}
+});
 
 /* =========================
    ROOT ROUTE
