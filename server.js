@@ -1,5 +1,4 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const mysql = require('mysql2');
 const cors = require('cors');
 
@@ -9,23 +8,16 @@ app.use(express.json());
 app.use(cors());
 
 /* =========================
-   DATABASE CONNECTION (FINAL FIX)
+   FINAL DATABASE FIX (HARDCODED)
 ========================= */
 
-const dbUrl = process.env.MYSQL_URL;
-
-if (!dbUrl) {
-  console.error("❌ MYSQL_URL not found");
-}
-
-const parsed = new URL(dbUrl);
-
+// 🔥 YOUR ACTUAL INTERNAL DB URL (from Railway)
 const db = mysql.createConnection({
-  host: parsed.hostname,
-  user: parsed.username,
-  password: parsed.password,
-  database: parsed.pathname.replace('/', ''),
-  port: parsed.port
+  host: "mysql.railway.internal",
+  user: "root",
+  password: "suIGnCa0wI1vnhKWrHEirgusRPNGTVhR",
+  database: "railway",
+  port: 3306
 });
 
 db.connect((err) => {
