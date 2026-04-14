@@ -11,12 +11,18 @@ app.use(cors());
 /* =========================
    DATABASE CONNECTION (FINAL FIX)
 ========================= */
+
+// 🔥 Use your MYSQL_PUBLIC_URL from Railway
+const dbUrl = "mysql://root:suIGnCa0wI1vnhKWrHEirgusRPNGTVhR@monorail.proxy.rlwy.net:18123/railway";
+
+const parsed = new URL(dbUrl);
+
 const db = mysql.createConnection({
-  host: "monorail.proxy.rlwy.net",
-  user: "root",
-  password: "suIGnCa0wI1vnhKWrHEirgusRPNGTVhR", // your actual password
-  database: "railway",
-  port: 18123
+  host: parsed.hostname,
+  user: parsed.username,
+  password: parsed.password,
+  database: parsed.pathname.replace('/', ''),
+  port: parsed.port
 });
 
 db.connect((err) => {
