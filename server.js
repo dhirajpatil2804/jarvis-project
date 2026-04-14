@@ -8,37 +8,46 @@ app.use(express.json());
 app.use(cors());
 
 /* =========================
-   DEBUG ENV VARIABLES
+   ENV DEBUG (VERY IMPORTANT)
 ========================= */
 
 console.log("ENV CHECK:", {
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
+  host: process.env.MYSQLHOST || "❌",
+  user: process.env.MYSQLUSER || "❌",
   password: process.env.MYSQLPASSWORD ? "✔️" : "❌",
-  db: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT,
+  database: process.env.MYSQLDATABASE || "❌",
+  port: process.env.MYSQLPORT || "❌",
 });
 
 /* =========================
-   DATABASE CONNECTION (FORCE TRY)
+   DATABASE CONNECTION
 ========================= */
 
-const pool = mysql.createPool({
-  host: process.env.MYSQLHOST || "mysql.railway.internal",
-  user: process.env.MYSQLUSER || "root",
-  password: process.env.MYSQLPASSWORD || "",
-  database: process.env.MYSQLDATABASE || "railway",
-  port: process.env.MYSQLPORT || 3306,
-});
+let pool;
 
-pool.getConnection((err, conn) => {
-  if (err) {
-    console.error("❌ DB Error:", err.message);
-  } else {
-    console.log("✅ Connected to DB");
-    conn.release();
-  }
-});
+try {
+  pool = mysql.createPool({
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE,
+    port: process.env.MYSQLPORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+  });
+
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.error("❌ DB Connection Error:", err.message);
+    } else {
+      console.log("✅ Connected to Railway MySQL");
+      conn.release();
+    }
+  });
+
+} catch (err) {
+  console.error("❌ DB INIT ERROR:", err.message);
+}
 
 /* =========================
    ROOT ROUTE
