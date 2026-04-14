@@ -8,29 +8,41 @@ app.use(express.json());
 app.use(cors());
 
 /* =========================
-   FINAL DATABASE FIX (POOL + ENV)
+   SAFE DATABASE SETUP
 ========================= */
 
-// Use Railway internal variables
-const pool = mysql.createPool({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT,
-  waitForConnections: true,
-  connectionLimit: 10
-});
+let pool = null;
 
-// Test connection
-pool.getConnection((err, conn) => {
-  if (err) {
-    console.error("❌ DB Connection Error:", err);
+try {
+  if (
+    process.env.MYSQLHOST &&
+    process.env.MYSQLUSER &&
+    process.env.MYSQLPASSWORD
+  ) {
+    console.log("ENV OK ✅");
+
+    pool = mysql.createPool({
+      host: process.env.MYSQLHOST,
+      user: process.env.MYSQLUSER,
+      password: process.env.MYSQLPASSWORD,
+      database: process.env.MYSQLDATABASE,
+      port: process.env.MYSQLPORT,
+    });
+
+    pool.getConnection((err, conn) => {
+      if (err) {
+        console.error("❌ DB Error:", err.message);
+      } else {
+        console.log("✅ Connected to DB");
+        conn.release();
+      }
+    });
   } else {
-    console.log("✅ Connected to Railway MySQL");
-    conn.release();
+    console.log("⚠️ ENV VARIABLES MISSING");
   }
-});
+} catch (err) {
+  console.error("❌ DB INIT ERROR:", err.message);
+}
 
 /* =========================
    ROOT ROUTE
