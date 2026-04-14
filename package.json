@@ -1,14 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Dhiraj",
   "license": "ISC",
-  "description": "",
+  "description": "Jarvis Project Backend",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
